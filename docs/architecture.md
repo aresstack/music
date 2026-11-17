@@ -2,20 +2,26 @@
 
 This repository contains independently usable music libraries, not a single shared runtime.
 
-## First module: music-model
+## music-model
 
-- `com.aresstack.music.model`: immutable composition, score-related domain state (sections, parts, voices, tracks, clips, notes, time maps and dynamics).
-- `com.aresstack.music.model.edit`: domain-level scoped editing, patching, revisions and history.
-- `com.aresstack.music.model.mix`: immutable stage/mix description only; no signal processing or studio UI.
+- `com.aresstack.music.model`: immutable composition domain (sections, parts, voices, tracks, clips, notes, time maps and dynamics).
+- `com.aresstack.music.model.edit`: scoped editing, patching, revisions and history.
+- `com.aresstack.music.model.mix`: immutable mix descriptions, without signal processing or UI.
 
-`music-model` has **no dependencies outside the JDK** at runtime. JUnit is test-only. A dependency/architecture test enforces the source boundary.
+The domain depends on the **JDK only**. Architecture tests prevent imports from AI and application packages.
 
-The initial code is adapted from `aresstack/audio`'s `composition` module, with a new library package namespace. No changes are made in the source repository.
+## music-notation
 
-## Next component: music-notation
+- `notation.json.CompositionJson`: lossless, versioned `aresstack-composition` (V1/V2) JSON codec; preserves existing Audio Studio wire format. JSON file helpers remain internal implementation details.
+- `notation.ai.AiNotesJson`: independent detailed note batches for one part/section. Parser accepts object notes, short note rows and legacy aliases. Optional caller-supplied resource limit; no arbitrary format-level 256-note cap.
+- `notation.context.ContextBuilder`: deterministic, hashable AI reading views built from the canonical composition, with exact notes in requested windows and summaries elsewhere. Context look-back is an **explicit call argument**, not mutable global process state.
 
-Define separate APIs for the lossless `aresstack-composition` versioned JSON document, model-generated note-writing JSON for one part and section, and deterministic compact musical context. The compact format is a derived view and **must not** silently become the sole exchange or storage format. Do not move AI model clients, retry logic or prompt orchestration into notation.
+These represent **different interfaces**, not three interchangeable storage formats. The compact context is a derived, potentially lossy presentation and is never the canonical score. Chat providers, prompts, retries, file-cache orchestration, UI, and live audio remain outside the library.
 
-## Compatibility and publication
+## Independence
 
-The initial port targets Java 21, matching the source model's records and sealed types. It does not guarantee Java 8 compatibility. Versions and Maven Central publication require a separate API and license review. No audio processing, UI or GitHub Actions runtime is included in `music-model`.
+The original sources in `aresstack/audio` remain unmodified and are referenced read-only for compatibility. No refactoring, new dependencies, or builds are required in Audio Studio.
+
+## Publication
+
+The initial port uses **Java 21**, consistent with the existing model's records. Public Maven Central releases, the artifact coordinates, minimum Java version and legal notices require separate review. No server or running microservice is necessary.
