@@ -1,0 +1,8 @@
+plugins {
+    id 'java-library'
+}
+
+// Keep the musical domain independent of infrastructure, user interfaces and AI providers.
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}

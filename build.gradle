@@ -1,0 +1,19 @@
+plugins {
+    id 'base'
+}
+
+subprojects {
+    apply plugin: 'java-library'
+
+    group = 'com.aresstack.music'
+    version = '0.1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.release = 21
+    }
+}

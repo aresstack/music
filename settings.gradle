@@ -1,0 +1,2 @@
+rootProject.name = 'music'
+include 'music-model', 'music-notation'
