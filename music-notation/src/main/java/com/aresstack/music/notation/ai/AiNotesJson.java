@@ -163,6 +163,9 @@ public final class AiNotesJson {
             }
         }
         if (value == null || value.isJsonNull()) {
+            if (Double.isNaN(fallback)) {
+                throw new IllegalArgumentException("Missing required field: " + name);
+            }
             return fallback;
         }
         double read = value.getAsDouble();
